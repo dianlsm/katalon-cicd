@@ -27,5 +27,3 @@ WebUI.setEncryptedText(findTestObject('Page_OrangeHRM/input_Password'), 'hUKwJTb
 
 WebUI.click(findTestObject('Page_OrangeHRM/button_Login'))
 
-WebUI.closeBrowser()
-
