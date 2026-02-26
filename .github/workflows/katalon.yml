@@ -1,0 +1,42 @@
+name: Run Katalon Tests
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  katalon-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 11
+
+      - name: Download KRE
+        run: |
+          wget https://download.katalon.com/10.0.0/Katalon_Studio_Engine_Linux_64-10.0.0.tar.gz
+          tar -xvf Katalon_Studio_Engine_Linux_64-10.0.0.tar.gz
+
+      - name: Run Test Suite
+        env:
+          KATALON_API_KEY: ${{ secrets.KATALON_API_KEY }}
+        run: |
+          ./Katalon_Studio_Engine_Linux_64-10.0.0/katalonc \
+          -noSplash \
+          -runMode=console \
+          -projectPath="$(pwd)/katalon-learning.prj" \
+          -retry=0 \
+          -testSuitePath="Test Suites/Login Suite" \
+          -browserType="Chrome (headless)" \
+          -executionProfile="default" \
+          -apiKey=$KATALON_API_KEY \
+          --config \
+          -proxy.auth.option=NO_PROXY \
+          -proxy.system.option=NO_PROXY \
+          -proxy.system.applyToDesiredCapabilities=true \
+          -webui.autoUpdateDrivers=true
